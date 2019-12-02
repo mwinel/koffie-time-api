@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mwinel/koffie-time-api.svg?branch=develop)](https://travis-ci.org/mwinel/koffie-time-api)
+[![Build Status](https://travis-ci.org/mwinel/koffie-time-api.svg?branch=develop)](https://travis-ci.org/mwinel/koffie-time-api)   [![Maintainability](https://api.codeclimate.com/v1/badges/53834ee596cb847f6923/maintainability)](https://codeclimate.com/github/mwinel/koffie-time-api/maintainability)
 
 # koffie-time-api
 
