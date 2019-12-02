@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mwinel/koffie-time-api.svg?branch=develop)](https://travis-ci.org/mwinel/koffie-time-api)
+[![Build Status](https://travis-ci.org/mwinel/koffie-time-api.svg?branch=develop)](https://travis-ci.org/mwinel/koffie-time-api)    [![Coverage Status](https://coveralls.io/repos/github/mwinel/koffie-time-api/badge.svg?branch=develop)](https://coveralls.io/github/mwinel/koffie-time-api?branch=develop)
 
 # koffie-time-api
 
