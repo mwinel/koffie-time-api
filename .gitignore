@@ -43,7 +43,6 @@ pip-delete-this-directory.txt
 htmlcov/
 .tox/
 .coverage
-.coveragerc
 .coverage.*
 .cache
 nosetests.xml
@@ -96,9 +95,3 @@ ENV/
 
 # SQLite3
 db.sqlite3
-
-#the coverage file
-.coveragerc
-.DS_Store
-
-htmlcov/*
