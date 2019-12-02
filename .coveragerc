@@ -1,0 +1,7 @@
+[run]
+source= koffietime/apps/
+omit=
+    koffie-time-api/venv/*
+    */__init__.py
+    */tests/*
+    */apps.py
