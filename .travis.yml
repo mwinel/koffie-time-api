@@ -7,6 +7,7 @@ services:
 
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
 
 before_script:
   - psql -c 'create database koffietime;' -U postgres
@@ -16,7 +17,7 @@ before_script:
 script:
   - python manage.py makemigrations
   - python manage.py migrate
-  - coverage run --source='koffietime/apps' manage.py test && coverage report
+  - coverage run manage.py test koffietime/apps/ && coverage report
 
 after_success:
   - coveralls
