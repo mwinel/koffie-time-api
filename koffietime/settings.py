@@ -37,10 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    'rest_framework',
 
+    # third party
+    'rest_framework',
+    
+    # local
     'koffietime.apps.index',
+    'koffietime.apps.posts',
 ]
 
 MIDDLEWARE = [
