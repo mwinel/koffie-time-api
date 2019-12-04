@@ -16,7 +16,7 @@ before_script:
 script:
   - python manage.py makemigrations
   - python manage.py migrate
-  - coverage run --source='koffietime/apps' manage.py test && coverage report
+  - coverage run --source='koffietime/apps/' manage.py test && coverage report
 
 after_success:
   - coveralls
