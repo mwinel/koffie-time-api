@@ -2,113 +2,142 @@ from django.urls import reverse
 
 from rest_framework import status
 
-from koffietime.apps.posts.models import Post
 from .base import BaseTestCase
 
 
 class PostCrudTestCase(BaseTestCase):
     """
-        Test cases for post crud functionality.
+    Test cases for post crud functionality.
     """
 
     def test_post_model_returns_string_object(self):
         """
-            Test post object string representation is returned.
+        Test post object string representation is returned.
         """
         self.assertTrue(self.post.body, str(self.post))
 
     def test_create_post(self):
         """
-            Test create post.
+        Test create post.
         """
-        url = reverse('posts_list')
-        response = self.client.post(url, self.create_post_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    def test_create_post_bad_request(self):
-        """
-            Test create post successfully returns 400 bad error.
-        """
-        url = reverse('posts_list')
-        response = self.client.post(
-            url, self.create_post_data_missing_title, format='json')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        res = self.create_post
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(
+            res.json()['message'], 'Post successfully created.')
 
     def test_create_post_with_similar_title(self):
         """
-            Test create post with similar title.
+        Test create post with similar title.
         """
-        url = reverse('posts_list')
-        response = self.client.post(
-            url, self.create_post_data, format='json')
+        self.create_post
         res = self.client.post(
-            url, self.create_post_data, format='json')
+            reverse('create_posts'),
+            self.create_post_data,
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json')
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(res.json()['title'], [
                          'Post with a similar title already exists, try something better.'])
 
     def test_get_posts(self):
         """
-            Test get all posts.
+        Test get all posts.
         """
-        url = reverse('posts_list')
-        response = self.client.get(url, format='json', page_size=None)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        res = response.json()
-        res['count'] = 0
-        self.assertIn('Post', res['results'][0]['title'])
+        res = self.client.get(
+            reverse('retrieve_posts'),
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_get_post(self):
         """
-            Test get a single post.
+        Test get a single post.
         """
-        url = reverse('posts_detail', kwargs={'slug': 'post'})
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        res = self.client.get(
+            reverse('retrieve_post', kwargs={'slug': 'post'}),
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
 
     def test_get_post_that_does_not_exist(self):
         """
-            Test get a single post that does not exist.
+        Test get a single post that does not exist.
         """
-        url = reverse('posts_detail', kwargs={'slug': 'post-1'})
-        response = self.client.get(url, format='json')
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        res = self.client.get(
+            reverse('retrieve_post', kwargs={'slug': 'post-does-not-exist'}),
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json')
+        self.assertEqual(res.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_a_post(self):
         """
-            Test update a post.
+        Test update a post.
         """
         # create a post
-        url = reverse('posts_list')
-        response = self.client.post(
-            url, self.create_post_data, format='json')
+        self.create_post
         # update post
-        update_url = reverse('posts_detail', kwargs={'slug': 'post-1'})
-        res = self.client.put(update_url, self.update_post_data, format='json')
+        res = self.client.put(
+            reverse('update_post', kwargs={'slug': 'post-1'}),
+            self.update_post_data,
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json')
         self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.json()['message'], 'Post successfully updated.')
 
-    def test_update_a_post_bad_request(self):
+    def test_update_a_post_forbidden_request(self):
         """
-            Test update a post on a bad request.
+        Test update a post forbidden request.
         """
         # create a post
-        url = reverse('posts_list')
-        response = self.client.post(
-            url, self.create_post_data, format='json')
-        # update post with exisiting post title
-        update_url = reverse('posts_detail', kwargs={'slug': 'post-1'})
-        res = self.client.put(update_url, self.create_post_data, format='json')
-        self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
+        self.create_post
+        # login another user
+        login_response = self.client.post(
+            reverse('user_login'),
+            self.login_data_two,
+            format='json')
+        token = login_response.json()['token']
+        auth_header = 'Bearer {}'.format(token)
+        # update post
+        res = self.client.put(
+            reverse('update_post', kwargs={'slug': 'post-1'}),
+            self.update_post_data,
+            HTTP_AUTHORIZATION=auth_header,
+            format='json')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            res.json()['error'], 'You do not have permissions to edit this post.')
 
     def test_delete_a_post(self):
         """
-            Test delete a post.
+        Test delete a post.
         """
         # create a post
-        url = reverse('posts_list')
-        response = self.client.post(
-            url, self.create_post_data, format='json')
-        # delete post with exisiting post title
-        delete_url = reverse('posts_detail', kwargs={'slug': 'post-1'})
-        res = self.client.delete(delete_url, format='json')
+        self.create_post
+        # delete post
+        res = self.client.delete(
+            reverse('delete_post', kwargs={'slug': 'post-1'}),
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json')
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_delete_a_post_forbidden_request(self):
+        """
+        Test delete a post forbidden request.
+        """
+        # create a post
+        self.create_post
+        # login another user
+        login_response = self.client.post(
+            reverse('user_login'),
+            self.login_data_two,
+            format='json')
+        token = login_response.json()['token']
+        auth_header = 'Bearer {}'.format(token)
+        # delete post
+        res = self.client.delete(
+            reverse('delete_post', kwargs={'slug': 'post-1'}),
+            HTTP_AUTHORIZATION=auth_header,
+            format='json')
+        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(
+            res.json()['error'], 'You do not have permissions to delete this post.')

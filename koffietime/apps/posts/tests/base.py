@@ -1,23 +1,62 @@
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+
 from rest_framework.test import APITestCase, APIClient
 
 from koffietime.apps.posts.models import Post
 
 
+User = get_user_model()
+
+
 class BaseTestCase(APITestCase):
     """
-       Base Test Cases for posts.
+    Base Test Cases for posts.
     """
 
     def setUp(self):
         # Initialize test client.
         self.client = APIClient()
+        # Create user.
+        self.user = User.objects.create_user(
+            email='test1@gmail.com',
+            username='test1',
+            password='test@1'
+        )
+        self.user.save()
+        # Create user 2.
+        self.user2 = User.objects.create_user(
+            email='test2@gmail.com',
+            username='test2',
+            password='test@2'
+        )
+        self.user2.save()
+        # login data for user 1
+        self.login_data = {
+            'email': self.user.email,
+            'password': self.user.password
+        }
+        # login data for user 2
+        self.login_data_two = {
+            'email': self.user2.email,
+            'password': self.user2.password
+        }
+        self.login = reverse('user_login')
+        # Login user 1
+        self.login_response = self.client.post(
+            self.login,
+            self.login_data,
+            format='json'
+        )
+        auth_token = self.login_response.json()['token']
+        self.auth_header = 'Bearer {}'.format(auth_token)
 
         self.post = Post.objects.create(
             title='Post',
             body='Body',
             image='image1',
             category='engineering',
-            tags=['python', 'aws']
+            tags=['python', 'aws'],
         )
 
         self.create_post_data = {
@@ -28,13 +67,12 @@ class BaseTestCase(APITestCase):
             'tags': ['python', 'aws']
         }
 
-        self.create_post_data_missing_title = {
-            'title': '',
-            'body': 'Body 2',
-            'image': 'image2',
-            'category': 'engineering',
-            'tags': ['python', 'aws']
-        }
+        self.create_post = self.client.post(
+            reverse('create_posts'),
+            self.create_post_data,
+            HTTP_AUTHORIZATION=self.auth_header,
+            format='json'
+        )
 
         self.update_post_data = {
             'title': 'Post one',
