@@ -2,8 +2,8 @@ autopep8==1.4.4
 cffi==1.13.2
 coverage==4.5.4
 cryptography==2.8
-Django==2.2.7
 django-templated-mail==1.1.1
+Django==2.2.8
 djangorestframework==3.10.3
 entrypoints==0.3
 flake8==3.7.9
