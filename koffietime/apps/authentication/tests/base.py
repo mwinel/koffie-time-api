@@ -39,7 +39,6 @@ class AuthenticationTestCase(APITestCase):
             password='test@3')
         setattr(self.inactive_user, 'is_active', False)
         self.inactive_user.save()
-        print(self.inactive_user.is_active)
 
         self.create_user_data = {
             'email': 'test2@gmail.com',

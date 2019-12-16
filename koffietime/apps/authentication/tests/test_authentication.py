@@ -160,7 +160,6 @@ class UserLoginTestCase(AuthenticationTestCase):
             reverse('user_login'),
             self.inactive_user_login_data,
             format='json')
-        print(res.json())
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(res.json()[
                          'error'][0], 'This user has been deactivated.')
