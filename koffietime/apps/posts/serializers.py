@@ -1,46 +1,77 @@
-from rest_framework import serializers
+from rest_framework.serializers import (
+    ModelSerializer,
+    ValidationError,
+    CharField,
+    ReadOnlyField
+)
 
 from .models import Post
-from .validations import PostValidations
-
-validators = PostValidations()
+from koffietime.apps.authentication.serializers import UserSerializer
 
 
-class PostSerializer(serializers.ModelSerializer):
+class PostsSerializer(ModelSerializer):
     """
-        This class maps the `Post` model instance
-        into JSON format.
+    Maps complex `post` querysets and model instances to be
+    converted to native Python datatypes that are easily rendered
+    into other content types such as `JSON` and `XML`.
     """
 
-    title = serializers.CharField(
+    title = CharField(
         required=True,
         error_messages={
             'blank': 'Title field cannot be left blank.'
-        },
-        validators=[validators.validate_title]
+        }
     )
-    body = serializers.CharField(
+
+    body = CharField(
         required=True,
         error_messages={
             'blank': 'Body field cannot be left blank.'
         }
     )
-    image = serializers.CharField(
+
+    image = CharField(
         required=True,
         error_messages={
             'blank': 'Image field cannot be left blank.'
         }
     )
-    category = serializers.CharField(
+
+    category = CharField(
         required=True,
         error_messages={
             'blank': 'Category field cannot be left blank.'
         }
     )
 
+    user = ReadOnlyField(source='user.username')
+
+    def validate_title(self, title):
+        post_exists = Post.objects.filter(title=title).exists()
+        if post_exists:
+            raise ValidationError(
+                'Post with a similar title already exists, try something better.')
+        return title
+
     class Meta:
         model = Post
-        # Return all of the comment fields that could possibly be included in a
-        # request or response, including fields specified explicitly above
-        fields = '__all__'
-        read_only_fields = ('created_on', 'updated_on')
+        fields = (
+            'id',
+            'title',
+            'body',
+            'image',
+            'category',
+            'tags',
+            'slug',
+            'likes',
+            'dislikes',
+            'draft',
+            'public',
+            'reported',
+            'report_count',
+            'read_time',
+            'created_on',
+            'updated_on',
+            'user'
+        )
+        read_only_fields = ('created_on', 'updated_on', 'user')
