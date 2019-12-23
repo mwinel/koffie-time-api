@@ -5,9 +5,9 @@ from django.contrib.auth.hashers import check_password
 from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
-    CharField
+    CharField,
+    ValidationError
 )
-from rest_framework.serializers import ValidationError
 
 from .models import User
 
