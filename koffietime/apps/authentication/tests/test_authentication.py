@@ -72,42 +72,6 @@ class UserSignupTestCase(AuthenticationTestCase):
             format='json')
         self.assertEqual(res.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_signup_username_validation(self):
-        """
-        Test signup raises username validation errors.
-        """
-        url = reverse('user_signup')
-        spaced_username = self.client.post(
-            url, self.create_user_spaced_username_data, format='json')
-        short_username = self.client.post(
-            url, self.create_user_short_username_data, format='json')
-        blank_username = self.client.post(
-            url, self.create_user_blank_username_data, format='json')
-        self.assertEqual(spaced_username.status_code,
-                         status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(short_username.status_code,
-                         status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(blank_username.status_code,
-                         status.HTTP_400_BAD_REQUEST)
-
-    def test_signup_password_validation(self):
-        """
-        Test signup raises password validation errors.
-        """
-        url = reverse('user_signup')
-        short_password = self.client.post(
-            url, self.create_user_short_password_data, format='json')
-        spaced_password = self.client.post(
-            url, self.create_user_spaced_password_data, format='json')
-        strong_password = self.client.post(
-            url, self.create_user_strong_password_data, format='json')
-        self.assertEqual(short_password.status_code,
-                         status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(spaced_password.status_code,
-                         status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(strong_password.status_code,
-                         status.HTTP_400_BAD_REQUEST)
-
 
 class UserLoginTestCase(AuthenticationTestCase):
     """

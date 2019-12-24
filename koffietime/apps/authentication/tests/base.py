@@ -82,15 +82,17 @@ class AuthenticationTestCase(APITestCase):
             'username': 'user 23',
             'password': 'testone'
         }
-        self.create_user_short_password_data = {
-            'email': 'user@email.com',
-            'username': 'user203',
-            'password': 'tes'
-        }
+
         self.login_data = {
             'email': self.user.email,
-            'password': self.user.password
+            'password': 'test@1'
         }
+        self.login_user = self.client.post(
+            reverse('user_login'),
+            self.login_data,
+            format='json'
+        )
+
         self.wrong_login_data = {
             'email': self.user.email,
             'password': self.user.email
@@ -109,5 +111,5 @@ class AuthenticationTestCase(APITestCase):
         }
         self.inactive_user_login_data = {
             'email': self.inactive_user.email,
-            'password': self.inactive_user.password
+            'password': 'test@3'
         }

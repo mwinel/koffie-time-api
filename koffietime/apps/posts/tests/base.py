@@ -34,12 +34,12 @@ class BaseTestCase(APITestCase):
         # login data for user 1
         self.login_data = {
             'email': self.user.email,
-            'password': self.user.password
+            'password': 'test@1'
         }
         # login data for user 2
         self.login_data_two = {
             'email': self.user2.email,
-            'password': self.user2.password
+            'password': 'test@2'
         }
         self.login = reverse('user_login')
         # Login user 1
