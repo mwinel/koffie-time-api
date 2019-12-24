@@ -45,7 +45,9 @@ INSTALLED_APPS = [
     'koffietime.core',
     'koffietime.apps.index',
     'koffietime.apps.authentication',
+    'koffietime.apps.profiles',
     'koffietime.apps.posts',
+    'koffietime.apps.comments',
 ]
 
 MIDDLEWARE = [
