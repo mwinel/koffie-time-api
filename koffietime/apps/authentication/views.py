@@ -1,3 +1,5 @@
+from django.contrib.auth.hashers import make_password
+
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -20,7 +22,12 @@ class UserSignupAPIView(APIView):
     authentication_classes = []
 
     def post(self, request, **kwargs):
-        serializer = self.serializer_class(data=request.data)
+        data = {}
+        data['email'] = request.data.get('email')
+        data['username'] = request.data.get('username')
+        data['password'] = make_password(request.data.get(
+            'password'), salt=None, hasher='default')
+        serializer = self.serializer_class(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response({

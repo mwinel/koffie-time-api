@@ -21,5 +21,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/v1/', include('koffietime.apps.index.urls')),
     path('api/v1/', include('koffietime.apps.authentication.urls')),
-    path('api/v1/', include('koffietime.apps.posts.urls'))
+    path('api/v1/', include('koffietime.apps.posts.urls')),
 ]

@@ -1,5 +1,7 @@
 import re
 
+from django.contrib.auth.hashers import check_password
+
 from rest_framework.serializers import (
     ModelSerializer,
     EmailField,
@@ -20,7 +22,6 @@ class UserSignupSerializer(ModelSerializer):
     email = EmailField()
     username = CharField(trim_whitespace=True)
     password = CharField(
-        max_length=16,
         write_only=True,
         required=True,
         error_messages={
@@ -48,33 +49,7 @@ class UserSignupSerializer(ModelSerializer):
         if username_exists:
             raise ValidationError(
                 'Username provided already exists.')
-        if len(username) <= 4:
-            raise ValidationError(
-                'Username should be longer than 4 characters.')
-        if re.search(r'[\s]', username):
-            raise ValidationError(
-                'Username should not contain spaces.')
         return username
-
-    def validate_password(self, password):
-        """
-        Validates user password.
-        - check if password is atleast longer than 6 characters
-        - check if password is alphanumeric
-        - password should not contain white spaces
-        """
-        if len(password) < 6:
-            raise ValidationError(
-                'Password should atleast be 6 characters.')
-        if not re.search(r'[0-9]', password) or not \
-            re.search(r'[a-zA-Z]', password) or not \
-                re.search(r'[!?@#$%^&*.]', password):
-            raise ValidationError(
-                'Password should include numbers and alphabets and one special character.')
-        if re.search(r'[\s]', password):
-            raise ValidationError(
-                'Password should not include white spaces.')
-        return password
 
     class Meta:
         model = User
@@ -106,7 +81,8 @@ class UserLoginSerializer(ModelSerializer):
 
         # If no user was found matching the password combination then
         # `authenticate` will return `None`. Raise an exception in this case.
-        if user.password != password:
+        password_valid = check_password(password, user.password)
+        if not password_valid:
             raise ValidationError(
                 'The email or password you entered is incorrect. Please try again.')
 

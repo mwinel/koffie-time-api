@@ -29,7 +29,7 @@ class UserManager(BaseUserManager):
             raise TypeError('Users must have an email address.')
         user = self.model(username=username, email=self.normalize_email(email))
         user.set_password(password)
-        user.save()
+        user.save(using=self._db)
         return user
 
     def create_superuser(self, username, email, password):

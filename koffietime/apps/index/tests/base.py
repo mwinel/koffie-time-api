@@ -24,7 +24,7 @@ class BaseTestCase(APITestCase):
         self.user.save()
         self.login_data = {
             'email': self.user.email,
-            'password': self.user.password
+            'password': 'test@1'
         }
         self.login = reverse('user_login')
         # Login user

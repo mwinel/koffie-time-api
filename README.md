@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mwinel/koffie-time-api.svg?branch=develop)](https://travis-ci.org/mwinel/koffie-time-api)   [![Maintainability](https://api.codeclimate.com/v1/badges/53834ee596cb847f6923/maintainability)](https://codeclimate.com/github/mwinel/koffie-time-api/maintainability)    [![Coverage Status](https://coveralls.io/repos/github/mwinel/koffie-time-api/badge.svg?branch=develop)](https://coveralls.io/github/mwinel/koffie-time-api?branch=develop)
+[![Build Status](https://travis-ci.com/mwinel/koffie-time-api.svg?token=Fca95Zwixo9gNVT3vdCP&branch=develop)](https://travis-ci.com/mwinel/koffie-time-api)   [![Maintainability](https://api.codeclimate.com/v1/badges/53834ee596cb847f6923/maintainability)](https://codeclimate.com/github/mwinel/koffie-time-api/maintainability)    [![Coverage Status](https://coveralls.io/repos/github/mwinel/koffie-time-api/badge.svg?branch=develop)](https://coveralls.io/github/mwinel/koffie-time-api?branch=develop)
 
 # koffie-time-api
 
