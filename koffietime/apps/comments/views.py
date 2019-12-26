@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
 from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
@@ -9,9 +8,8 @@ from rest_framework.permissions import (
 )
 
 from .models import Comment
-from koffietime.apps.posts.models import Post
 from .serializers import CommentSerializer
-from koffietime.core.utils import get_post, get_comment
+from koffietime.core.utils import get_post_by_slug, get_comment_by_id
 
 
 class CreateCommentsAPIView(APIView):
@@ -26,7 +24,7 @@ class CreateCommentsAPIView(APIView):
     permission_classes = [IsAuthenticated, AllowAny]
 
     def post(self, request, slug):
-        post = get_post(slug)
+        post = get_post_by_slug(slug)
         comment = request.data
         comment['post'] = post.id
         serializer = self.serializer_class(data=comment)
@@ -50,7 +48,7 @@ class RetrieveCommentsAPIView(APIView):
     authentication_classes = []
 
     def get(self, request, slug):
-        post = get_post(slug)
+        post = get_post_by_slug(slug)
         queryset = Comment.objects.filter(post=post)
         serializer = self.serializer_class(queryset, many=True)
         return Response({'comments': serializer.data},
@@ -72,8 +70,8 @@ class UpdateCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, id, slug):
-        post = get_post(slug)
-        comment = get_comment(id)
+        post = get_post_by_slug(slug)
+        comment = get_comment_by_id(id)
         if comment.user.username == request.user.username:
             data = {}
             data['post'] = post.id
@@ -104,8 +102,8 @@ class DestroyCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, id, slug):
-        get_post(slug)
-        comment = get_comment(id)
+        get_post_by_slug(slug)
+        comment = get_comment_by_id(id)
         if comment.user.username == request.user.username:
             comment.delete()
             return Response({

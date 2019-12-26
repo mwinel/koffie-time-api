@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
 from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly
@@ -10,13 +9,7 @@ from rest_framework.permissions import (
 from .models import Post
 from .serializers import PostsSerializer
 from .pagination import PostsPagination, PaginationHandlerMixin
-
-
-def get_object(slug):
-    try:
-        return Post.objects.get(slug=slug)
-    except Post.DoesNotExist:
-        raise NotFound({'error': 'Post not found.'})
+from koffietime.core.utils import get_post_by_slug
 
 
 class CreatePostAPIView(APIView):
@@ -78,7 +71,7 @@ class RetrievePostAPIView(APIView):
     authentication_classes = []
 
     def get(self, request, slug, format=None):
-        post = get_object(slug)
+        post = get_post_by_slug(slug)
         serializer = self.serializer_class(post)
         return Response({'post': serializer.data})
 
@@ -97,7 +90,7 @@ class UpdatePostAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, slug, format=None):
-        post = get_object(slug)
+        post = get_post_by_slug(slug)
         if post.user == request.user:
             serializer = self.serializer_class(post, data=request.data)
             serializer.is_valid(raise_exception=True)
@@ -124,7 +117,7 @@ class DestroyPostAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def delete(self, request, slug, format=None):
-        post = get_object(slug)
+        post = get_post_by_slug(slug)
         if post.user == request.user:
             post.delete()
             return Response({
