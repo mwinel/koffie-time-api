@@ -41,7 +41,7 @@ class CreateDestroyBookmarkView(APIView):
             bookmark.delete()
             message = 'Post successfully removed from bookmarks.'
         elif not post.user.id == request.user.id:
-            # Bookmark a possible if it was not created by the current user.
+            # Bookmark a post if it was not created by the current user.
             bookmark = Bookmark(post=post, user=request.user)
             bookmark.save()
             message = 'Post successfully added to bookmarks.'

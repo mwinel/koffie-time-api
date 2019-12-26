@@ -9,7 +9,7 @@ User = get_user_model()
 
 class BaseTestCase(APITestCase):
     """
-    Base Test Cases for bookmarks.
+    Base Test Cases for likes.
     """
 
     def setUp(self):

@@ -15,7 +15,6 @@ class Post(models.Model):
     body = models.TextField()
     image = models.CharField(max_length=500, null=True)
     likes = models.IntegerField(default=0)
-    dislikes = models.IntegerField(default=0)
     category = models.TextField(null=True)
     tags = ArrayField(models.CharField(max_length=200), blank=True, null=True)
     draft = models.BooleanField(default=True)
