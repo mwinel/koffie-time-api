@@ -24,5 +24,6 @@ urlpatterns = [
     path('api/v1/', include('koffietime.apps.authentication.urls')),
     path('api/v1/', include('koffietime.apps.profiles.urls')),
     path('api/v1/', include('koffietime.apps.posts.urls')),
-    path('api/v1/', include('koffietime.apps.comments.urls'))
+    path('api/v1/', include('koffietime.apps.comments.urls')),
+    path('api/v1/', include('koffietime.apps.bookmarks.urls'))
 ]
