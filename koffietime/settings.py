@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'koffietime.apps.profiles',
     'koffietime.apps.posts',
     'koffietime.apps.comments',
-    'koffietime.apps.bookmarks'
+    'koffietime.apps.bookmarks',
+    'koffietime.apps.likes'
 ]
 
 MIDDLEWARE = [

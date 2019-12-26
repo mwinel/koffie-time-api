@@ -64,7 +64,6 @@ class PostsSerializer(ModelSerializer):
             'tags',
             'slug',
             'likes',
-            'dislikes',
             'draft',
             'public',
             'reported',
