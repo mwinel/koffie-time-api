@@ -1,22 +1,14 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
 from rest_framework.permissions import (
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-    AllowAny
+    IsAuthenticatedOrReadOnly
 )
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
-
-
-def get_user(username):
-    try:
-        return UserProfile.objects.get(user__username=username) 
-    except UserProfile.DoesNotExist:
-        raise NotFound({'error': 'User not found.'})
+from koffietime.core.utils import get_user_by_username
 
 
 class RetrieveUserProfilesAPIView(APIView):
@@ -51,7 +43,7 @@ class RetrieveUserProfileAPIView(APIView):
     authentication_classes = []
 
     def get(self, request, username, format=None):
-        profile = get_user(username)
+        profile = get_user_by_username(username)
         serializer = self.serializer_class(profile)
         return Response({'profile': serializer.data})
 
@@ -69,13 +61,8 @@ class UpdateUserProfileAPIView(APIView):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
 
-    # def get_object(self):
-    #     return get_object_or_404(
-    #         self.get_queryset(), user__username=self.kwargs.get('username')
-    #     )
-
     def put(self, request, username, format=None):
-        profile = get_user(username)
+        profile = get_user_by_username(username)
         if profile.user == request.user:
             serializer = self.serializer_class(profile, data=request.data)
             serializer.is_valid(raise_exception=True)
