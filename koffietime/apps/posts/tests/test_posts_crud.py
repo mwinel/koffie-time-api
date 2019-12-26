@@ -5,7 +5,7 @@ from rest_framework import status
 from .base import BaseTestCase
 
 
-class PostCrudTestCase(BaseTestCase):
+class PostsCrudTestCase(BaseTestCase):
     """
     Test cases for post crud functionality.
     """
