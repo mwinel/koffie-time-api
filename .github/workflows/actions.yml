@@ -17,7 +17,7 @@ jobs:
           DATABASE_HOST: localhost
           DATABASE_PORT: 5432
         ports:
-        - 5432/tcp
+        - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
@@ -40,7 +40,6 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics 
     - name: Test with PyTest
       run: |
-        pip install pytest
+        pip install coveralls
         python manage.py makemigrations
         python manage.py migrate
-        pytest
