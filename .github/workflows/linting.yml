@@ -1,4 +1,4 @@
-name: Linting
+name: Koffie Time API Linting
 
 on: [push]
 
