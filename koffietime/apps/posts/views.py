@@ -9,6 +9,7 @@ from rest_framework.permissions import (
 from .models import Post
 from .serializers import PostsSerializer
 from .pagination import PostsPagination, PaginationHandlerMixin
+from .readtime import ReadTime
 from koffietime.core.utils import get_post_by_slug
 
 
@@ -26,7 +27,9 @@ class CreatePostAPIView(APIView):
     def post(self, request, **kwargs):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(user=self.request.user)
+        read_time = ReadTime(request.data['body'])
+        serializer.save(user=self.request.user,
+                        read_time=read_time.calculate_read_time())
         return Response({
             'post': serializer.data,
             'message': 'Post successfully created.'
