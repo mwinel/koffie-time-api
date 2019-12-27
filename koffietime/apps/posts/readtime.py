@@ -18,7 +18,7 @@ class ReadTime:
         number_of_words = len(re.findall(r'\w+', self.body))
         time = round(number_of_words / WORDS_PER_MINUTE)
         if time < 1:
-            return 'less than a minute read'
+            return 'less than a min read'
         if time == 1:
             return '1 minute read'
         if time >= minutes_per_hour:
@@ -26,5 +26,5 @@ class ReadTime:
             if hours >= hours_per_day:
                 days = round(hours / hours_per_day)
                 return '{} days read'.format(days)
-            return '{} hours read'.format(hours)
-        return '{} minutes read'.format(time)
+            return '{} hrs read'.format(hours)
+        return '{} min read'.format(time)
