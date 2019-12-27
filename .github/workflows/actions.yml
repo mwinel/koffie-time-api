@@ -15,7 +15,7 @@ jobs:
           DATABASE_PASSWORD: postgres
           DATABASE_NAME: koffietime
           DATABASE_HOST: localhost
-          DATABASE_PORT: 5432
+          DATABASE_PORT: 5433
         # ports:
         # - 5432:5432
         # needed because the postgres container does not provide a healthcheck
